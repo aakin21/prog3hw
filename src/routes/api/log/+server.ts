@@ -7,8 +7,15 @@ const logPath = path.resolve('static/data/log.json');
 export const GET: RequestHandler = async () => {
 	try {
 		const logs: string[] = JSON.parse(await fs.readFile(logPath, 'utf-8'));
-		return new Response(JSON.stringify(logs), { status: 200 });
+
+		return new Response(JSON.stringify(logs), {
+			status: 200,
+			headers: { 'Content-Type': 'application/json' }
+		});
 	} catch (err) {
-		return new Response('Failed to read logs.', { status: 500 });
+		return new Response(JSON.stringify({ error: 'Failed to read logs.' }), {
+			status: 500,
+			headers: { 'Content-Type': 'application/json' }
+		});
 	}
 };
