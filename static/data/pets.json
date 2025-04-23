@@ -1,2 +1,20 @@
 [
+  {
+    "id": 1,
+    "name": "Buddy",
+    "type": "puppy",
+    "adopted": false
+  },
+  {
+    "id": 2,
+    "name": "Mittens",
+    "type": "kitten",
+    "adopted": false
+  },
+  {
+    "id": 3,
+    "name": "Charlie",
+    "type": "puppy",
+    "adopted": false
+  }
 ]
