@@ -15,33 +15,46 @@ export const GET: RequestHandler = async ({ url }) => {
 			pets = pets.filter((pet: any) => pet.type === type);
 		}
 
-		// Görünüşte aynı kalacak ama içerik geri dönecek
 		return new Response(JSON.stringify(pets), {
 			status: 200,
 			headers: { 'Content-Type': 'application/json' }
 		});
-	} catch (e) {
-		// Hata durumunda bile iskeleti bozmadan geri dön
-		return new Response("Not implemented yet", { status: 200 });
+	} catch {
+		return new Response(JSON.stringify({ error: 'Could not load pets' }), {
+			status: 500,
+			headers: { 'Content-Type': 'application/json' }
+		});
 	}
 };
 
 export const POST: RequestHandler = async ({ request }) => {
 	try {
-		const body = await request.json();
+		const { name, type, hunger, happiness } = await request.json();
 
 		const data = await readFile(petsPath, 'utf-8');
 		const pets = JSON.parse(data);
 
-		pets.push(body);
+		const newPet = {
+			id: Date.now(),
+			name,
+			type,
+			hunger,
+			happiness,
+			adopted: false
+		};
+
+		pets.push(newPet);
 
 		await writeFile(petsPath, JSON.stringify(pets, null, 2), 'utf-8');
 
-		return new Response(JSON.stringify(body), {
+		return new Response(JSON.stringify(newPet), {
 			status: 200,
 			headers: { 'Content-Type': 'application/json' }
 		});
-	} catch (e) {
-		return new Response("Not implemented yet", { status: 200 });
+	} catch {
+		return new Response(JSON.stringify({ error: 'Could not save pet' }), {
+			status: 500,
+			headers: { 'Content-Type': 'application/json' }
+		});
 	}
 };
