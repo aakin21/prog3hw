@@ -6,6 +6,36 @@ const petsPath = path.resolve('static/data/pets.json');
 const usersPath = path.resolve('static/data/users.json');
 const logPath = path.resolve('static/data/log.json');
 
+export const GET: RequestHandler = async ({ url }) => {
+	const userName = url.searchParams.get('name');
+	if (!userName) {
+		return new Response(JSON.stringify({ error: 'Missing username' }), { status: 400 });
+	}
+
+	try {
+		const usersRaw = await readFile(usersPath, 'utf-8');
+		const petsRaw = await readFile(petsPath, 'utf-8');
+
+		const users = JSON.parse(usersRaw);
+		const pets = JSON.parse(petsRaw);
+
+		const user = users.find((u: any) => u.name === userName);
+
+		if (!user) {
+			return new Response(JSON.stringify({ error: 'User not found' }), { status: 404 });
+		}
+
+		const userPets = pets.filter((p: any) => user.pets.includes(p.id));
+
+		return new Response(JSON.stringify(userPets), {
+			status: 200,
+			headers: { 'Content-Type': 'application/json' }
+		});
+	} catch (e) {
+		return new Response(JSON.stringify({ error: 'Server error' }), { status: 500 });
+	}
+};
+
 export const POST: RequestHandler = async ({ request }) => {
 	try {
 		const { petId, userName } = await request.json();
