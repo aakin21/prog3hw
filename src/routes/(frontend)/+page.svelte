@@ -10,7 +10,22 @@
     }
 
     async function adopt(petId: number) {
-        alert(`Pet with ID ${petId} adopted!`);
+        const userName = 'demoUser'; // TODO: replace with current session user
+
+        const res = await fetch('/api/adopt', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ petId, userName })
+        });
+
+        if (res.ok) {
+            await loadPets();
+        } else {
+            const error = await res.json();
+            alert(`Adoption failed: ${error.error}`);
+        }
     }
 
     onMount(loadPets);
