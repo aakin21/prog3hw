@@ -1,22 +1,77 @@
 <script lang="ts">
-	import { currentUser } from '$lib/stores';
-	import { onMount } from 'svelte';
+    import { currentUser } from '$lib/stores';
+    import { onMount } from 'svelte';
+    import { goto } from '$app/navigation';
 
-	onMount(() => {
-		// TODO: redirect to /login if there is no signed in user and redirect to root if the user is not an admin
-	});
+    let name = '';
+    let type: 'puppy' | 'kitten' = 'puppy';
+    let hunger = 50;
+    let happiness = 50;
+    let error = '';
+    let success = '';
 
+    onMount(() => {
+        // TODO: redirect to /login if there is no signed in user and redirect to root if the user is not an admin
+        if (!$currentUser) {
+            goto('/login');
+        } else if ($currentUser.role !== 'admin') {
+            goto('/');
+        }
+    });
 
-	async function addPet() {
-		// TODO post on /api/pets
-	}
+    async function addPet() {
+        // TODO post on /api/pets
+        const res = await fetch('/api/pets', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, type, hunger, happiness })
+        });
+
+        if (res.ok) {
+            success = 'Pet added!';
+            error = '';
+            name = '';
+            hunger = 50;
+            happiness = 50;
+        } else {
+            const err = await res.json();
+            error = err.error || 'Failed to add pet';
+            success = '';
+        }
+    }
 </script>
 
 <h1>Add a New Pet</h1>
 
-<form on:submit|preventDefault={addPet}>
-</form>
+{#if success}<p style="color: green;">{success}</p>{/if}
+{#if error}<p style="color: red;">{error}</p>{/if}
 
+<form on:submit|preventDefault={addPet}>
+    <label>
+        Name:
+        <input type="text" bind:value={name} required />
+    </label>
+
+    <label>
+        Type:
+        <select bind:value={type}>
+            <option value="puppy">Puppy</option>
+            <option value="kitten">Kitten</option>
+        </select>
+    </label>
+
+    <label>
+        Hunger:
+        <input type="number" bind:value={hunger} min="0" max="100" />
+    </label>
+
+    <label>
+        Happiness:
+        <input type="number" bind:value={happiness} min="0" max="100" />
+    </label>
+
+    <button type="submit">Add Pet</button>
+</form>
 
 <style>
     form {
