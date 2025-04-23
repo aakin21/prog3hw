@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
+    import { currentUser } from '$lib/stores';
 
     let pets = [];
     let petType: '' | 'puppy' | 'kitten' = '';
@@ -10,21 +11,29 @@
     }
 
     async function adopt(petId: number) {
-        const userName = 'demoUser'; // TODO: replace with current session user
+        if (!$currentUser || !$currentUser.name) {
+            alert('You must be logged in to adopt a pet.');
+            return;
+        }
 
         const res = await fetch('/api/adopt', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ petId, userName })
+            body: JSON.stringify({
+                petId,
+                userName: $currentUser.name
+            })
         });
 
-        if (res.ok) {
-            await loadPets();
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(`Adoption failed: ${data.error}`);
         } else {
-            const error = await res.json();
-            alert(`Adoption failed: ${error.error}`);
+            alert('Pet adopted successfully!');
+            await loadPets();
         }
     }
 
