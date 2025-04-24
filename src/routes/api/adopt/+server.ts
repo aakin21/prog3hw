@@ -25,7 +25,10 @@ export const GET: RequestHandler = async ({ url }) => {
 			return new Response(JSON.stringify({ error: 'User not found' }), { status: 404 });
 		}
 
-		const userPets = pets.filter((p: any) => user.pets.includes(p.id));
+		// ✅ Sadece gerçekten adopted olanları göster
+		const userPets = pets.filter((p: any) =>
+			user.pets.includes(p.id) && p.adopted === true
+		);
 
 		return new Response(JSON.stringify(userPets), {
 			status: 200,
