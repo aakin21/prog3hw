@@ -49,6 +49,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 
 		pet.adopted = true;
+		pet.hunger = 50;
+		pet.happiness = 50;
 
 		const usersRaw = await readFile(usersPath, 'utf-8');
 		const users = JSON.parse(usersRaw);
