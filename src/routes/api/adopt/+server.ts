@@ -11,7 +11,6 @@ export const GET: RequestHandler = async ({ url }) => {
 	if (!userName) {
 		return new Response(JSON.stringify({ error: 'Missing username' }), { status: 400 });
 	}
-
 	try {
 		const usersRaw = await readFile(usersPath, 'utf-8');
 		const petsRaw = await readFile(petsPath, 'utf-8');
@@ -24,8 +23,6 @@ export const GET: RequestHandler = async ({ url }) => {
 		if (!user) {
 			return new Response(JSON.stringify({ error: 'User not found' }), { status: 404 });
 		}
-
-		// ✅ Kullanıcının gerçekten sahiplendiği ve kendisine ait olan pet'leri getir
 		const userPets = pets.filter((p: any) =>
 			user.pets.includes(p.id) &&
 			p.adopted === true &&
@@ -54,7 +51,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 
 		pet.adopted = true;
-		pet.owner = userName; // ✅ Sahip bilgisini kaydet
+		pet.owner = userName;
 		pet.hunger = 50;
 		pet.happiness = 50;
 
@@ -73,11 +70,14 @@ export const POST: RequestHandler = async ({ request }) => {
 		await writeFile(petsPath, JSON.stringify(pets, null, 2), 'utf-8');
 		await writeFile(usersPath, JSON.stringify(users, null, 2), 'utf-8');
 
+
 		const logsRaw = await readFile(logPath, 'utf-8');
 		const logs = JSON.parse(logsRaw);
 		logs.push(`${user.name} adopted ${pet.name} (-$20)`);
 
+
 		await writeFile(logPath, JSON.stringify(logs, null, 2), 'utf-8');
+
 
 		return new Response(JSON.stringify({ success: true }), { status: 200 });
 	} catch (e) {
