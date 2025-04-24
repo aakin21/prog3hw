@@ -13,7 +13,7 @@
     async function loadPets() {
         if (!user) return;
 
-        const res = await fetch(`/api/adopt?name=${user.name}`); // ✅ düzeltildi
+        const res = await fetch(`/api/adopt?name=${user.name}`);
         if (res.ok) {
             pets = await res.json();
         } else {
@@ -24,7 +24,7 @@
     async function handleAction(petId: number, action: 'feed' | 'toy' | 'return') {
         if (!user) return;
 
-        const res = await fetch('/api/user/action', {
+        const res = await fetch('/api/action', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -37,8 +37,11 @@
         });
 
         if (res.ok) {
+            const result = await res.json();
             success = `${action} action successful`;
             error = '';
+            user.inventory = result.user.inventory;
+            user.budget = result.user.budget;
             await loadPets();
         } else {
             const err = await res.json();
@@ -65,7 +68,12 @@
     <p>You haven’t adopted any pets yet.</p>
 {:else}
     <!-- Inventory Display -->
-    <p>Inventory: Food, Toys, and Treats will be shown here later.</p>
+    <p>
+        Inventory:
+        Food: {user?.inventory?.food ?? 0},
+        Toys: {user?.inventory?.toy ?? 0},
+        Treats: {user?.inventory?.treat ?? 0}
+    </p>
 
     <!-- Show your pets here -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
