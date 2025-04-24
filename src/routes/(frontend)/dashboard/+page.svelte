@@ -1,30 +1,59 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { currentUser } from '$lib/stores';
-	import type { Pet } from '$lib/types';
-	import { goto } from '$app/navigation';
+    import { onMount } from 'svelte';
+    import { currentUser } from '$lib/stores';
+    import type { Pet } from '$lib/types';
+    import { goto } from '$app/navigation';
 
-	let pets: Pet[] = [];
-	let error = '';
-	let success = '';
+    let pets: Pet[] = [];
+    let error = '';
+    let success = '';
 
-	$: user = $currentUser;
+    $: user = $currentUser;
 
-	async function loadPets() {
-		// TODO load your pets
-	}
+    async function loadPets() {
+        if (!user) return;
 
-	async function handleAction(petId: number, action: 'feed' | 'toy' | 'return') {
+        const res = await fetch(`/api/adopt?name=${user.name}`); // ✅ düzeltildi
+        if (res.ok) {
+            pets = await res.json();
+        } else {
+            error = 'Failed to load pets';
+        }
+    }
 
-	}
+    async function handleAction(petId: number, action: 'feed' | 'toy' | 'return') {
+        if (!user) return;
 
-	onMount(() => {
-		if (!user) {
-			goto('/login');
-		} else {
-			loadPets();
-		}
-	});
+        const res = await fetch('/api/user/action', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: user.name,
+                petId,
+                action
+            })
+        });
+
+        if (res.ok) {
+            success = `${action} action successful`;
+            error = '';
+            await loadPets();
+        } else {
+            const err = await res.json();
+            error = err.error || 'Action failed';
+            success = '';
+        }
+    }
+
+    onMount(() => {
+        if (!user) {
+            goto('/login');
+        } else {
+            loadPets();
+        }
+    });
 </script>
 
 <h1>📋 Your Adopted Pets</h1>
@@ -36,8 +65,21 @@
     <p>You haven’t adopted any pets yet.</p>
 {:else}
     <!-- Inventory Display -->
+    <p>Inventory: Food, Toys, and Treats will be shown here later.</p>
 
-<!--    show your pets here-->
+    <!-- Show your pets here -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        {#each pets as pet}
+            <div style="border: 1px solid #ccc; padding: 1rem; border-radius: 8px;">
+                <h3>{pet.name}</h3>
+                <p>Hunger: {pet.hunger}</p>
+                <p>Happiness: {pet.happiness}</p>
+                <button on:click={() => handleAction(pet.id, 'feed')}>Feed (-$5)</button>
+                <button on:click={() => handleAction(pet.id, 'toy')}>Play (-$10)</button>
+                <button on:click={() => handleAction(pet.id, 'return')}>Return (-$20)</button>
+            </div>
+        {/each}
+    </div>
 {/if}
 
 <style>
