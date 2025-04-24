@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { currentUser } from '$lib/stores';
-	import { goto } from '$app/navigation';
+    import { currentUser } from '$lib/stores';
+    import { goto } from '$app/navigation';
 
-	$: user = $currentUser;
+    $: user = $currentUser;
 
-	function logout() {
-		currentUser.set(null);
-		goto('/login');
-	}
+    function logout() {
+        currentUser.set(null);
+        goto('/login');
+    }
 </script>
 
 <nav>
@@ -16,7 +16,11 @@
         <a href="/dashboard">Dashboard</a>
         <a href="/logs">Logs</a>
         <a href="/shop">Shop</a>
-<!--        if the user is an administrator add a button here that redirects the user to /admin-->
+
+        {#if user.role === 'admin'}
+            <a href="/admin">Admin</a>
+        {/if}
+
         <button on:click={logout}>Logout</button>
         <span class="user">{user.name}</span>
     {:else}
