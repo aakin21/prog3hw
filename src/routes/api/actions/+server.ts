@@ -21,7 +21,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		const user = users.find((u: any) => u.name === name);
 		const pet = pets.find((p: any) => p.id === petId);
 
-		// ✅ SADECE SAHİBİNE İZİN VER
+
 		if (!user || !pet || pet.owner !== user.name) {
 			return new Response(JSON.stringify({ error: 'Invalid user or pet' }), { status: 400 });
 		}
@@ -60,13 +60,16 @@ export const POST: RequestHandler = async ({ request }) => {
 			return new Response(JSON.stringify({ error: 'Invalid action' }), { status: 400 });
 		}
 
+
 		user.budget -= cost;
 		logs.push(logMessage);
+
 
 		await writeFile(usersPath, JSON.stringify(users, null, 2), 'utf-8');
 		await writeFile(petsPath, JSON.stringify(pets, null, 2), 'utf-8');
 		await writeFile(logPath, JSON.stringify(logs, null, 2), 'utf-8');
 
+		
 		return new Response(JSON.stringify({
 			success: true,
 			user: {
