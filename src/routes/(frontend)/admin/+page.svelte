@@ -10,17 +10,17 @@
     let error = '';
     let success = '';
 
+    $: user = $currentUser;
+
     onMount(() => {
-        // TODO: redirect to /login if there is no signed in user and redirect to root if the user is not an admin
-        if (!$currentUser) {
+        if (!user) {
             goto('/login');
-        } else if ($currentUser.role !== 'admin') {
+        } else if (user.role !== 'admin') {
             goto('/');
         }
     });
 
     async function addPet() {
-        // TODO post on /api/pets
         const res = await fetch('/api/pets', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
