@@ -5,7 +5,7 @@
 
     onMount(async () => {
         // TODO get logs
-        const res = await fetch('/api/logs');
+        const res = await fetch('/api/log');
         if (res.ok) {
             const data = await res.json();
             logs = data.reverse(); // newest on top
