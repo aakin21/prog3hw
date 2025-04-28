@@ -7,7 +7,7 @@ const usersPath = path.resolve('static/data/users.json');
 const prices: Record<string, number> = {
 	food: 10,
 	toy: 15,
-	treat: 5
+	treat: 30
 };
 
 export const POST: RequestHandler = async ({ request }) => {
