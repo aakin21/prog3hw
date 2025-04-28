@@ -3,11 +3,15 @@
     import { currentUser } from '$lib/stores';
 
     let pets = [];
-    let petType: '' | 'puppy' | 'kitten' = '';
+    let petType: string = '';
+    let availableTypes: Set<string> = new Set(); // 🔥 Dinamik type'lar
 
     async function loadPets() {
         const res = await fetch(`/api/pets${petType ? `?type=${petType}` : ''}`);
         pets = await res.json();
+
+        // 🔥 Gelen petlerin tüm type'larını dinamik olarak topla
+        availableTypes = new Set(pets.map(pet => pet.type));
     }
 
     async function adopt(petId: number) {
@@ -44,14 +48,17 @@
 
 <div style="margin-bottom: 1rem;">
     <button on:click={() => { petType = ''; loadPets(); }}>All</button>
-    <button on:click={() => { petType = 'puppy'; loadPets(); }}>Puppies</button>
-    <button on:click={() => { petType = 'kitten'; loadPets(); }}>Kittens</button>
+
+    {#each Array.from(availableTypes) as type}
+        <button on:click={() => { petType = type; loadPets(); }}>
+            {type.charAt(0).toUpperCase() + type.slice(1)}s
+        </button>
+    {/each}
 </div>
 
 {#if pets.length === 0}
     <p>No pets available.</p>
 {:else}
-    <!--    show available pets here-->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
         {#each pets as pet}
             <div style="border: 1px solid #ccc; padding: 1rem; border-radius: 8px;">
