@@ -4,36 +4,63 @@
     import { goto } from '$app/navigation';
 
     let name = '';
-    let type = '';
+    let selectedType = '';
+    let customType = '';
     let hunger = 50;
     let happiness = 50;
     let error = '';
     let success = '';
+    let availableTypes: Set<string> = new Set();
 
     $: user = $currentUser;
 
-    onMount(() => {
+    onMount(async () => {
         if (!user) {
             goto('/login');
         } else if (user.role !== 'admin') {
             goto('/');
+        } else {
+            await loadAvailableTypes();
         }
     });
 
+    async function loadAvailableTypes() {
+        try {
+            const res = await fetch('/api/pets');
+            if (res.ok) {
+                const pets = await res.json();
+                availableTypes = new Set(pets.map((pet: any) => pet.type));
+            } else {
+                console.error('Failed to load pets for types');
+            }
+        } catch (error) {
+            console.error('Error loading types', error);
+        }
+    }
+
     async function addPet() {
+        const typeToSend = selectedType === 'other' ? customType : selectedType;
+
+        if (!typeToSend) {
+            error = 'Please select or enter a type.';
+            return;
+        }
+
         const res = await fetch('/api/pets', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, type, hunger, happiness })
+            body: JSON.stringify({ name, type: typeToSend, hunger, happiness })
         });
 
         if (res.ok) {
             success = 'Pet added!';
             error = '';
             name = '';
-            type = '';
+            selectedType = '';
+            customType = '';
             hunger = 50;
             happiness = 50;
+            await loadAvailableTypes(); 
         } else {
             const err = await res.json();
             error = err.error || 'Failed to add pet';
@@ -55,8 +82,21 @@
 
     <label>
         Type:
-        <input type="text" bind:value={type} required />
+        <select bind:value={selectedType} required>
+            <option value="" disabled selected>Select type</option>
+            {#each Array.from(availableTypes) as type}
+                <option value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>
+            {/each}
+            <option value="other">Other</option>
+        </select>
     </label>
+
+    {#if selectedType === 'other'}
+        <label>
+            Custom Type:
+            <input type="text" bind:value={customType} placeholder="Enter custom type" required />
+        </label>
+    {/if}
 
     <label>
         Hunger:
