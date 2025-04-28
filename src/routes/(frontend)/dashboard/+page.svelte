@@ -48,6 +48,11 @@
             const err = await res.json();
             error = err.error || 'Action failed';
             success = '';
+
+            // 🔥 Inventory yoksa shop sayfasına otomatik yönlendir
+            if (error.includes('No food') || error.includes('No toy')) {
+                goto('/shop');
+            }
         }
     }
 

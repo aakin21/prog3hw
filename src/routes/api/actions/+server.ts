@@ -21,12 +21,10 @@ export const POST: RequestHandler = async ({ request }) => {
 		const user = users.find((u: any) => u.name === name);
 		const pet = pets.find((p: any) => p.id === petId);
 
-
 		if (!user || !pet || pet.owner !== user.name) {
 			return new Response(JSON.stringify({ error: 'Invalid user or pet' }), { status: 400 });
 		}
 
-		// Stat kontrolü
 		pet.hunger = pet.hunger ?? 50;
 		pet.happiness = pet.happiness ?? 50;
 		user.inventory = user.inventory ?? { food: 0, toy: 0, treat: 0 };
@@ -35,6 +33,9 @@ export const POST: RequestHandler = async ({ request }) => {
 		let logMessage = '';
 
 		if (action === 'feed') {
+			if (pet.hunger === 0) {
+				return new Response(JSON.stringify({ error: `${pet.name} is not hungry!` }), { status: 400 });
+			}
 			if ((user.inventory.food || 0) <= 0) {
 				return new Response(JSON.stringify({ error: 'No food in inventory' }), { status: 400 });
 			}
@@ -51,7 +52,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			pet.happiness = Math.min(pet.happiness + 30, 100);
 			logMessage = `${user.name} played with ${pet.name} (-$${cost})`;
 		} else if (action === 'return') {
-			cost = 20;
+			cost = 10;
 			user.pets = user.pets.filter((id: number) => id !== pet.id);
 			pet.adopted = false;
 			pet.owner = null;
@@ -60,16 +61,13 @@ export const POST: RequestHandler = async ({ request }) => {
 			return new Response(JSON.stringify({ error: 'Invalid action' }), { status: 400 });
 		}
 
-
 		user.budget -= cost;
 		logs.push(logMessage);
-
 
 		await writeFile(usersPath, JSON.stringify(users, null, 2), 'utf-8');
 		await writeFile(petsPath, JSON.stringify(pets, null, 2), 'utf-8');
 		await writeFile(logPath, JSON.stringify(logs, null, 2), 'utf-8');
 
-		
 		return new Response(JSON.stringify({
 			success: true,
 			user: {
