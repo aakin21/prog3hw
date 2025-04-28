@@ -4,13 +4,13 @@
 
     let pets = [];
     let petType: string = '';
-    let availableTypes: Set<string> = new Set(); // 🔥 Dinamik type'lar
+    let availableTypes: Set<string> = new Set();
 
     async function loadPets() {
         const res = await fetch(`/api/pets${petType ? `?type=${petType}` : ''}`);
         pets = await res.json();
 
-        // 🔥 Gelen petlerin tüm type'larını dinamik olarak topla
+
         availableTypes = new Set(pets.map(pet => pet.type));
     }
 

@@ -4,7 +4,7 @@
     import { goto } from '$app/navigation';
 
     let name = '';
-    let type: 'puppy' | 'kitten' = 'puppy';
+    let type = '';
     let hunger = 50;
     let happiness = 50;
     let error = '';
@@ -31,6 +31,7 @@
             success = 'Pet added!';
             error = '';
             name = '';
+            type = '';
             hunger = 50;
             happiness = 50;
         } else {
@@ -54,10 +55,7 @@
 
     <label>
         Type:
-        <select bind:value={type}>
-            <option value="puppy">Puppy</option>
-            <option value="kitten">Kitten</option>
-        </select>
+        <input type="text" bind:value={type} required />
     </label>
 
     <label>
