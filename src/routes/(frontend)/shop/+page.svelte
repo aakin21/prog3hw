@@ -39,7 +39,7 @@
 
     <button on:click={() => buy('food')}>Buy Food ($10)</button>
     <button on:click={() => buy('toy')}>Buy Toy ($15)</button>
-    <button on:click={() => buy('treat')}>Buy Treat ($5)</button>
+    <button on:click={() => buy('treat')}>Buy Treat ($30)</button>
 {/if}
 
 <style>
