@@ -33,9 +33,6 @@ export const POST: RequestHandler = async ({ request }) => {
 		let logMessage = '';
 
 		if (action === 'feed') {
-			if (pet.hunger === 0) {
-				return new Response(JSON.stringify({ error: `${pet.name} is not hungry!` }), { status: 400 });
-			}
 			if ((user.inventory.food || 0) <= 0) {
 				return new Response(JSON.stringify({ error: 'No food in inventory' }), { status: 400 });
 			}
@@ -43,6 +40,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			user.inventory.food -= 1;
 			pet.hunger = Math.max(pet.hunger - 20, 0);
 			logMessage = `${user.name} fed ${pet.name} (-$${cost})`;
+
 		} else if (action === 'toy') {
 			if ((user.inventory.toy || 0) <= 0) {
 				return new Response(JSON.stringify({ error: 'No toy in inventory' }), { status: 400 });
@@ -51,12 +49,24 @@ export const POST: RequestHandler = async ({ request }) => {
 			user.inventory.toy -= 1;
 			pet.happiness = Math.min(pet.happiness + 30, 100);
 			logMessage = `${user.name} played with ${pet.name} (-$${cost})`;
+
 		} else if (action === 'return') {
 			cost = 10;
 			user.pets = user.pets.filter((id: number) => id !== pet.id);
 			pet.adopted = false;
 			pet.owner = null;
 			logMessage = `${user.name} returned ${pet.name} (-$${cost})`;
+
+		} else if (action === 'treat') {
+			if ((user.inventory.treat || 0) <= 0) {
+				return new Response(JSON.stringify({ error: 'No treat in inventory' }), { status: 400 });
+			}
+			cost = 30; 
+			user.inventory.treat -= 1;
+			pet.hunger = Math.max(pet.hunger - 10, 0);
+			pet.happiness = Math.min(pet.happiness + 20, 100);
+			logMessage = `${user.name} gave a treat to ${pet.name} (-$${cost})`;
+
 		} else {
 			return new Response(JSON.stringify({ error: 'Invalid action' }), { status: 400 });
 		}
