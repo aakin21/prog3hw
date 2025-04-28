@@ -22,9 +22,10 @@
     }
 
     async function handleAction(petId: number, action: 'feed' | 'toy' | 'return') {
+        console.log(`clicked action: ${action} - petId: ${petId}`);
         if (!user) return;
 
-        const res = await fetch('/api/action', {
+        const res = await fetch('/api/actions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -82,7 +83,11 @@
                 <h3>{pet.name}</h3>
                 <p>Hunger: {pet.hunger}</p>
                 <p>Happiness: {pet.happiness}</p>
-                <button on:click={() => handleAction(pet.id, 'feed')}>Feed (-$5)</button>
+                <button
+                        on:click={() => handleAction(pet.id, 'feed')}
+                        disabled={pet.hunger === 0}>
+                    Feed (-$5)
+                </button>
                 <button on:click={() => handleAction(pet.id, 'toy')}>Play (-$10)</button>
                 <button on:click={() => handleAction(pet.id, 'return')}>Return (-$20)</button>
             </div>
