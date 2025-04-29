@@ -61,7 +61,7 @@ export const POST: RequestHandler = async ({ request }) => {
 			if ((user.inventory.treat || 0) <= 0) {
 				return new Response(JSON.stringify({ error: 'No treat in inventory' }), { status: 400 });
 			}
-			cost = 30; 
+			cost = 30;
 			user.inventory.treat -= 1;
 			pet.hunger = Math.max(pet.hunger - 10, 0);
 			pet.happiness = Math.min(pet.happiness + 20, 100);

@@ -1,20 +1,69 @@
 [
   {
-    "id": 1,
-    "name": "Buddy",
-    "type": "puppy",
-    "adopted": false
+    "id": 1745850132500,
+    "name": "test1",
+    "type": "t-rex",
+    "hunger": 50,
+    "happiness": 50,
+    "adopted": false,
+    "owner": null
   },
   {
-    "id": 2,
-    "name": "Mittens",
+    "id": 1745850148887,
+    "name": "test2kitten",
     "type": "kitten",
+    "hunger": 30,
+    "happiness": 80,
+    "adopted": false,
+    "owner": null
+  },
+  {
+    "id": 1745850357092,
+    "name": "testpuppy",
+    "type": "puppy",
+    "hunger": 50,
+    "happiness": 50,
     "adopted": false
   },
   {
-    "id": 3,
-    "name": "Charlie",
+    "id": 1745851543110,
+    "name": "test7",
+    "type": "t-rex",
+    "hunger": 50,
+    "happiness": 50,
+    "adopted": false
+  },
+  {
+    "id": 1745851720884,
+    "name": "dragon1",
+    "type": "dragon",
+    "hunger": 50,
+    "happiness": 80,
+    "adopted": false,
+    "owner": null
+  },
+  {
+    "id": 1745934917057,
+    "name": "test10",
+    "type": "rabbit",
+    "hunger": 50,
+    "happiness": 50,
+    "adopted": false
+  },
+  {
+    "id": 1745935092559,
+    "name": "azranurbenimit",
+    "type": "gerizekali",
+    "hunger": 50,
+    "happiness": 50,
+    "adopted": false
+  },
+  {
+    "id": 1745935103973,
+    "name": "karabas",
     "type": "puppy",
+    "hunger": 50,
+    "happiness": 50,
     "adopted": false
   }
 ]

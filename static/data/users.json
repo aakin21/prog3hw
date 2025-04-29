@@ -1,2 +1,99 @@
 [
+  {
+    "id": 1745420163054,
+    "name": "azra",
+    "passwordHash": "$2b$10$Jeqr0URl4sXwberKamY13OTTVKLn6pPzucCRTWrWOZ0V9Hc8N3hhS",
+    "pets": [
+      1,
+      2,
+      3,
+      2,
+      3
+    ],
+    "budget": -91,
+    "inventory": {
+      "food": 1,
+      "toy": 0,
+      "treat": 1
+    },
+    "role": "admin"
+  },
+  {
+    "id": 1745420283346,
+    "name": "akin1",
+    "passwordHash": "$2b$10$qJy2Un9iadsVywHf/6y6/esosI0wzW5mlajavQpHW3YQeoSMaTCZe",
+    "pets": [],
+    "budget": 100,
+    "inventory": {
+      "food": 0,
+      "toy": 0,
+      "treat": 0
+    },
+    "role": "user"
+  },
+  {
+    "id": 1745420858713,
+    "name": "akin123",
+    "passwordHash": "$2b$10$Fqg3WPme0gz73LQ65H.qpetT/AcY2LszCLATgCQCsjKMHU39RZJ.K",
+    "pets": [
+      1
+    ],
+    "budget": 80,
+    "inventory": {
+      "food": 0,
+      "toy": 0,
+      "treat": 0
+    },
+    "role": "user"
+  },
+  {
+    "id": 1745421605281,
+    "name": "userr",
+    "passwordHash": "$2b$10$2rp5ku/FkkN8EKk0dKKYxOe29KBn785b/nqB3ucwWTFrLwf7VGpZO",
+    "pets": [
+      2,
+      3,
+      1,
+      2,
+      3,
+      1
+    ],
+    "budget": -170,
+    "inventory": {
+      "food": 1,
+      "toy": 1,
+      "treat": 1
+    },
+    "role": "user"
+  },
+  {
+    "id": 1745483525687,
+    "name": "akin",
+    "passwordHash": "$2b$10$AiynF8Y5VMv/SJuu4LSE1u0FUwJwBmK6gqb1c9cRSQF2GrCdPHbbS",
+    "pets": [
+      101
+    ],
+    "budget": -10,
+    "inventory": {
+      "food": 0,
+      "toy": 1,
+      "treat": 1
+    },
+    "role": "user"
+  },
+  {
+    "id": 1745848608501,
+    "name": "akinbayerr",
+    "passwordHash": "$2b$10$F7H9pnyPSubvTQyp/m0IQOt3NiDMFFaHXlXAWQsKzi72nvkgAVUbe",
+    "pets": [
+      104
+    ],
+    "budget": -5,
+    "inventory": {
+      "food": 0,
+      "toy": 0,
+      "treat": 0
+    },
+    "role": "user"
+  }
 ]

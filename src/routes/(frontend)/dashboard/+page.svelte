@@ -21,7 +21,7 @@
         }
     }
 
-    async function handleAction(petId: number, action: 'feed' | 'toy' | 'return') {
+    async function handleAction(petId: number, action: 'feed' | 'toy' | 'return' | 'treat') {
         console.log(`clicked action: ${action} - petId: ${petId}`);
         if (!user) return;
 
@@ -49,8 +49,8 @@
             error = err.error || 'Action failed';
             success = '';
 
-            // 🔥 Inventory yoksa shop sayfasına otomatik yönlendir
-            if (error.includes('No food') || error.includes('No toy')) {
+
+            if (error.includes('No food') || error.includes('No toy') || error.includes('No treat')) {
                 goto('/shop');
             }
         }
@@ -73,7 +73,6 @@
 {#if pets.length === 0}
     <p>You haven’t adopted any pets yet.</p>
 {:else}
-    <!-- Inventory Display -->
     <p>
         Inventory:
         Food: {user?.inventory?.food ?? 0},
@@ -81,7 +80,6 @@
         Treats: {user?.inventory?.treat ?? 0}
     </p>
 
-    <!-- Show your pets here -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
         {#each pets as pet}
             <div style="border: 1px solid #ccc; padding: 1rem; border-radius: 8px;">
@@ -95,6 +93,7 @@
                 </button>
                 <button on:click={() => handleAction(pet.id, 'toy')}>Play (-$10)</button>
                 <button on:click={() => handleAction(pet.id, 'return')}>Return (-$20)</button>
+                <button on:click={() => handleAction(pet.id, 'treat')}>Give Treat (-$30)</button> <!-- 🔥 -->
             </div>
         {/each}
     </div>

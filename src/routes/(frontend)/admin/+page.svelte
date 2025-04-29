@@ -60,7 +60,7 @@
             customType = '';
             hunger = 50;
             happiness = 50;
-            await loadAvailableTypes(); 
+            await loadAvailableTypes();
         } else {
             const err = await res.json();
             error = err.error || 'Failed to add pet';
